@@ -1,0 +1,12 @@
+local commonValue0 = "\226\129\130\146"  -- Simpan nilai dalam variabel
+
+-- Gunakan nilai ini dalam args
+local args = {
+    [1] = {
+        [1] = {
+            [1] = commonValue0  -- Gunakan commonValue yang sudah didefinisikan
+        }
+    }
+}
+
+game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
