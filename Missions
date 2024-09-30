@@ -1,0 +1,17 @@
+local commonValue2 = "\226\129\130\140"  -- Simpan nilai yang sama di variabel
+local actions = {"KillToilets", "WinMatches", "PlayForHours"}  -- Daftar aksi
+
+for i = 1, 10 do  -- Loop untuk mengulang sebanyak 10 kali
+    for _, action in ipairs(actions) do
+        local args = {
+            [1] = {
+                [1] = {
+                    [1] = commonValue2,  -- Gunakan nilai dari variabel
+                    [2] = action  -- Nilai aksi dari tabel
+                }
+            }
+        }
+
+        game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
+    end
+end
