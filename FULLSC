@@ -18,4 +18,4 @@ executeLoadString("https://raw.githubusercontent.com/LocasTheBoys/tetes/refs/hea
 executeLoadString("https://raw.githubusercontent.com/LocasTheBoys/tetes/refs/heads/main/CrateGift", 5)
 
 -- Eksekusi loadstring 4
-executeLoadString("https://raw.githubusercontent.com/LocasTheBoys/tetes/refs/heads/main/Missions", 0)  -- Tidak perlu tunggu setelah yang terakhir
+executeLoadString("https://raw.githubusercontent.com/LocasTheBoys/tetes/refs/heads/main/PotionUse", 0)  -- Tidak perlu tunggu setelah yang terakhir
