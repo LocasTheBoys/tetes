@@ -1,11 +1,10 @@
--- Simpan nilai "\226\129\130\146" ke dalam variabel
-local commonValue = "\226\129\130\146"
+local commonValue5 = "\226\129\130\146"
 
 -- Script ke 1
 local args = {
     [1] = {
         [1] = {
-            [1] = commonValue  -- Gunakan nilai dari variabel
+            [1] = commonValue5  -- Gunakan nilai dari variabel
         }
     }
 }
