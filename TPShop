@@ -1,0 +1,8 @@
+-- Teleport Shop Event
+print("Teleport Ke Dekat Shop Event")
+if game.PlaceId == 13775256536 then
+    repeat task.wait() until game:isLoaded()
+    repeat task.wait() until game:GetService("Players")
+    repeat task.wait() until game:GetService("Players").LocalPlayer
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(597.06, 77.81, -1411.48)
+end
