@@ -1,6 +1,6 @@
 local commonValue = "\226\129\130\141"  -- Simpan nilai yang sama di variabel
 
-for i = 1, 40 do 
+for i = 1, 60 do 
     local args = {
         [1] = {
             [1] = {
