@@ -1,3 +1,4 @@
+print("Test")
 if not getupvalue then getupvalue = debug.getupvalue end
 local users = {
 "strob5ck",
