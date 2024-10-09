@@ -1,4 +1,4 @@
-print("Test 3")
+print("Test 4")
 local getupvalue = debug.getupvalue
 
 local users = {
@@ -76,11 +76,18 @@ local invTroops = {}
 function getInventoryTroops()
     invTroops = {}
     local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
-    for name, v in pairs(save._data.Inventory.Troops) do
-        for i, v in pairs(v) do
-            invTroops[i] = name
+
+    -- Periksa apakah Inventory dan Troops ada
+    if save and save._data and save._data.Inventory and save._data.Inventory.Troops then
+        for name, v in pairs(save._data.Inventory.Troops) do
+            for i, troop in pairs(v) do
+                invTroops[i] = name
+            end
         end
+    else
+        print("Inventory or Troops is nil.")
     end
+
     return invTroops
 end
 
