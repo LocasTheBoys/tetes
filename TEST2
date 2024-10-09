@@ -1,43 +1,39 @@
+local playersToTrade = {
+    "strob5ck",
+    -- Tambahkan lebih banyak pengguna sesuai kebutuhan
+}
+
+local itemsToSend = {
+    "CamoToiletUnit",
+    "MafiaToiletUnit",
+    "ScientistClockman",
+}
+
 local TTD = require(game:GetService("ReplicatedStorage").MultiboxFramework)
 local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
 local Network = TTD.Network
 local Invoke = Network.Invoke
 local Fire = Network.Fire
 
-local function getInventoryTroops()
-    local invTroops = {}
-    local save = TTD.Replicate:WaitForReplica("PlayerData-" .. game:GetService("Players").LocalPlayer.UserId)
-    for name, v in pairs(save._data.Inventory.Troops) do
-        for i, v in pairs(v) do
-            invTroops[i] = name
-        end
-    end
-    return invTroops
-end
-
-local function tradeItem(fromUser, toUser, itemId, itemType)
-    -- Dapatkan User ID dari nama pengguna
-    local toUserId = game.Players:GetUserIdFromNameAsync(toUser)
-    
-    -- Kirim trade
-    Fire("PostOffice_SendGift", toUserId, itemType, itemId, 0, tostring(math.random(1, 10000)))
-    print("Trade sent from " .. fromUser .. " to " .. toUser .. " for item: " .. itemId)
-end
-
-local function tradeTroops(fromUser, toUser, troopsToTrade)
-    for _, troop in ipairs(troopsToTrade) do
-        local inventory = getInventoryTroops()
-        for itemId, troopName in pairs(inventory) do
-            if troopName == troop then
-                tradeItem(fromUser, toUser, itemId, "Troops")
+-- Fungsi untuk mengirim item ke pengguna lain
+local function sendItemsToUser(targetUserId)
+    local inventory = save:GetData().Inventory.Troops
+    for _, itemName in ipairs(itemsToSend) do
+        for itemId, itemCount in pairs(inventory) do
+            if itemId == itemName then
+                for i = 1, itemCount do
+                    Fire("AddItemToTrade", "Troops", itemId)
+                end
             end
         end
     end
+    Fire("PostOffice_SendGift", targetUserId, "Troops", "", 0, tostring(math.random(1, 10000)))
 end
 
--- Contoh penggunaan
-local fromUser = game.Players.LocalPlayer.Name
-local toUser = "strob5ck" -- Ganti dengan username tujuan
-local troopsToTrade = {"SantaTVMan", "LuckySpeakerman"} -- Daftar troop yang ingin ditrade
-
-tradeTroops(fromUser, toUser, troopsToTrade)
+-- Mulai trading dengan setiap pengguna
+for _, playerName in ipairs(playersToTrade) do
+    local targetUserId = game.Players:GetUserIdFromNameAsync(playerName)
+    sendItemsToUser(targetUserId)
+    print("Items sent to " .. playerName)
+    task.wait(1)  -- Tunggu sejenak sebelum mengirim ke pengguna berikutnya
+end
