@@ -1,4 +1,4 @@
-print("Test")
+print("Test 2")
 -- Baris 1 diubah untuk langsung mengambil fungsi getupvalue dari debug
 local getupvalue = debug.getupvalue
 
@@ -31,28 +31,38 @@ task.spawn(function()
         task.wait(0.1)
     until Network ~= nil and Invoke ~= nil and Fire ~= nil
 
-    -- Baris 40: pengecekan apakah Invoke dan Fire sudah terinisialisasi
-    if Invoke and Fire then
+    -- Tambahkan pengecekan apakah Invoke dan Fire adalah fungsi
+    if type(Invoke) == "function" and type(Fire) == "function" then
         local GetFunc = getupvalue(Invoke, 1)
         local GetEvent = getupvalue(Fire, 1)
     else
-        print("Invoke or Fire is nil, skipping getupvalue.")
+        print("Invoke or Fire is not a function, skipping getupvalue.")
     end
 end)
 
 coroutine.wrap(function()
     setidentity(2)
-    hookfunc(getupvalue(Invoke, 1), function()
-        return true
-    end)
+    -- Pastikan Invoke adalah fungsi sebelum menggunakan getupvalue
+    if type(Invoke) == "function" then
+        hookfunc(getupvalue(Invoke, 1), function()
+            return true
+        end)
+    else
+        print("Invoke is not a function in coroutine.")
+    end
     setidentity(8)
 end)()
 
 coroutine.wrap(function()
     setidentity(2)
-    hookfunc(getupvalue(Fire, 1), function()
-        return true
-    end)
+    -- Pastikan Fire adalah fungsi sebelum menggunakan getupvalue
+    if type(Fire) == "function" then
+        hookfunc(getupvalue(Fire, 1), function()
+            return true
+        end)
+    else
+        print("Fire is not a function in coroutine.")
+    end
     setidentity(8)
 end)()
 
