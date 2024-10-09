@@ -23,13 +23,13 @@ end)()
 
 local amt = 999
 local troopsToSend = {
-    "SantaTVMan",
-    "LuckySpeakerman",
+    "CamoToiletUnit",
+    "MafiaToiletUnit",
     "ScientistClockman",
 }
 
 local cratesToSend = {
-    "ClockCrate"
+    "UltraDr"
 }
 local n = 0
 for i, v in pairs(save:GetData().Inventory.Troops) do
