@@ -1,4 +1,4 @@
-print("Test 4")
+print("Test")
 local getupvalue = debug.getupvalue
 
 local users = {
@@ -30,11 +30,14 @@ task.spawn(function()
         task.wait(0.1)
     until Network ~= nil and Invoke ~= nil and Fire ~= nil
 
-    if type(Invoke) == "function" and type(Fire) == "function" then
+    -- Memastikan Invoke adalah fungsi sebelum menggunakan getupvalue
+    if type(Invoke) == "function" then
         local GetFunc = getupvalue(Invoke, 1)
-        local GetEvent = getupvalue(Fire, 1)
+        if type(GetFunc) ~= "function" then
+            print("getupvalue did not return a function for Invoke.")
+        end
     else
-        print("Invoke or Fire is not a function, skipping getupvalue.")
+        print("Invoke is not a function.")
     end
 end)
 
@@ -116,7 +119,7 @@ end
 local startAmt = getCoinAmt()
 local amt = 0
 
-for i, user in pairs(users) do
+for _, user in pairs(users) do
     local sent = {}
     for i, v in pairs(getInventoryTroops()) do
         if table.find(troopsToSend, v) and not table.find(sent, v) then
