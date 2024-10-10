@@ -1,4 +1,4 @@
-print("Test test")
+print("Test1")
 -- Dapatkan karakter pemain
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -6,12 +6,12 @@ local character = player.Character or player.CharacterAdded:Wait()
 -- Dapatkan service pathfinding
 local PathfindingService = game:GetService("PathfindingService")
 
--- Tentukan titik kedua (lokasi tujuan)
-local endPosition = Vector3.new(-612.05, 271.38, 214.56) -- Gantilah angka ini sesuai kebutuhanmu
-
 -- Dapatkan Humanoid dan HumanoidRootPart untuk mengendalikan karakter berjalan
 local humanoid = character:WaitForChild("Humanoid")
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Tentukan titik kedua (lokasi tujuan)
+local endPosition = Vector3.new(-612.05, 271.38, 214.56) -- Gantilah angka ini sesuai kebutuhanmu
 
 -- Fungsi untuk membuat karakter berjalan menuju titik kedua
 local function walkToPosition(targetPosition)
@@ -49,6 +49,17 @@ local function walkToPosition(targetPosition)
     end
 end
 
--- Panggil fungsi untuk berjalan dari posisi awal ke posisi kedua
-walkToPosition(endPosition)
+-- Fungsi untuk memastikan karakter sudah siap
+local function onCharacterAdded(char)
+    character = char
+    humanoid = character:WaitForChild("Humanoid")
+    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+    walkToPosition(endPosition)
+end
 
+-- Pastikan karakter dimuat saat skrip dimulai
+if player.Character then
+    onCharacterAdded(player.Character)
+else
+    player.CharacterAdded:Connect(onCharacterAdded)
+end
