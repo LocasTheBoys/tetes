@@ -1,65 +1,53 @@
 print("Test1")
--- Dapatkan karakter pemain
+-- Dapatkan service PathfindingService
+local PathfindingService = game:GetService("PathfindingService")
+
+-- Dapatkan pemain dan karakter
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 
--- Dapatkan service pathfinding
-local PathfindingService = game:GetService("PathfindingService")
-
--- Dapatkan Humanoid dan HumanoidRootPart untuk mengendalikan karakter berjalan
-local humanoid = character:WaitForChild("Humanoid")
+-- Pastikan karakter sudah dimuat sepenuhnya sebelum melanjutkan
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local humanoid = character:WaitForChild("Humanoid")
 
--- Tentukan titik kedua (lokasi tujuan)
-local endPosition = Vector3.new(-612.05, 271.38, 214.56) -- Gantilah angka ini sesuai kebutuhanmu
+-- Tentukan lokasi tujuan (Ganti dengan koordinat yang diinginkan)
+local targetPosition = Vector3.new(-612.05, 271.38, 214.56)
 
--- Fungsi untuk membuat karakter berjalan menuju titik kedua
-local function walkToPosition(targetPosition)
-    -- Buat jalur menggunakan PathfindingService
+-- Fungsi untuk membuat pathfinding
+local function moveToPosition(targetPosition)
+    -- Buat jalur pathfinding
     local path = PathfindingService:CreatePath({
-        AgentRadius = 2, -- Ukuran lebar karakter (disesuaikan)
-        AgentHeight = 5, -- Tinggi karakter (disesuaikan)
-        AgentCanJump = true, -- Karakter bisa melompat
-        AgentJumpHeight = 10, -- Tinggi lompatan karakter
-        AgentMaxSlope = 45, -- Kemiringan maksimum yang bisa dilewati
+        AgentRadius = 2,
+        AgentHeight = 5,
+        AgentCanJump = true,
+        AgentJumpHeight = 10,
+        AgentMaxSlope = 45
     })
 
-    -- Hitung jalur dari posisi saat ini ke target
+    -- Hitung jalur dari posisi saat ini ke targetPosition
     path:ComputeAsync(humanoidRootPart.Position, targetPosition)
 
-    -- Jika jalur valid, maka karakter mulai berjalan mengikuti jalur
+    -- Jika jalur ditemukan
     if path.Status == Enum.PathStatus.Complete then
         local waypoints = path:GetWaypoints()
 
+        -- Looping ke setiap waypoint dalam jalur
         for _, waypoint in ipairs(waypoints) do
-            -- Berjalan ke setiap titik di jalur
             humanoid:MoveTo(waypoint.Position)
-
-            -- Tunggu sampai sampai di titik tersebut
+            
+            -- Tunggu sampai karakter mencapai waypoint
             humanoid.MoveToFinished:Wait()
 
-            -- Jika ada waypoint yang memerlukan lompatan
+            -- Jika waypoint memerlukan karakter melompat
             if waypoint.Action == Enum.PathWaypointAction.Jump then
                 humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
             end
         end
     else
-        -- Jika jalur tidak dapat ditemukan
-        warn("Tidak bisa menemukan jalur ke tujuan!")
+        -- Jika jalur tidak ditemukan
+        warn("Tidak dapat menemukan jalur ke tujuan.")
     end
 end
 
--- Fungsi untuk memastikan karakter sudah siap
-local function onCharacterAdded(char)
-    character = char
-    humanoid = character:WaitForChild("Humanoid")
-    humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-    walkToPosition(endPosition)
-end
-
--- Pastikan karakter dimuat saat skrip dimulai
-if player.Character then
-    onCharacterAdded(player.Character)
-else
-    player.CharacterAdded:Connect(onCharacterAdded)
-end
+-- Memanggil fungsi untuk bergerak ke targetPosition
+moveToPosition(targetPosition)
