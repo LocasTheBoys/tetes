@@ -11,7 +11,6 @@ local humanoid = character:WaitForChild("Humanoid")
 local positions = {
     Vector3.new(1409.43, 100.55, 2317.08), -- Tujuan a
     Vector3.new(1464.42, 99.66, 2324.25), -- Tujuan b
-    Vector3.new(1409.43, 100.55, 2317.08), -- Tujuan d
     Vector3.new(1438.85, 102.07, 2390.41), -- Tujuan 1
     Vector3.new(1438.85, 101.61, 2454.58), -- Tujuan 2
     Vector3.new(1437.18, 101.17, 2501.27), -- Tujuan 3
