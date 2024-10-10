@@ -1,0 +1,21 @@
+local commonValue = "\226\129\130^"  -- Simpan nilai yang sama di variabel
+
+local actions = {
+    {"2xEventXPBoost", 1}  -- Aksi dan jumlah pengulangan untuk script 1 Pencils Event
+}
+
+for _, action in ipairs(actions) do
+    local boostType, repeatCount = action[1], action[2]  -- Ambil aksi dan jumlah pengulangan
+    for i = 1, repeatCount do
+        local args = {
+            [1] = {
+                [1] = {
+                    [1] = commonValue,  -- Gunakan nilai dari variabel
+                    [2] = boostType      -- Gunakan jenis boost dari aksi
+                }
+            }
+        }
+
+        game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
+    end
+end
