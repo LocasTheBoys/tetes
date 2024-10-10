@@ -1,6 +1,4 @@
 print("Test test")
--- Script di bawah ini harus dimasukkan ke dalam LocalScript
-
 -- Dapatkan karakter pemain
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -8,18 +6,15 @@ local character = player.Character or player.CharacterAdded:Wait()
 -- Dapatkan service pathfinding
 local PathfindingService = game:GetService("PathfindingService")
 
--- Titik awal (lokasi karakter saat ini)
-local startPosition = character.HumanoidRootPart.Position
-
 -- Tentukan titik kedua (lokasi tujuan)
 local endPosition = Vector3.new(-612.05, 271.38, 214.56) -- Gantilah angka ini sesuai kebutuhanmu
 
--- Dapatkan Humanoid untuk mengendalikan karakter berjalan
+-- Dapatkan Humanoid dan HumanoidRootPart untuk mengendalikan karakter berjalan
 local humanoid = character:WaitForChild("Humanoid")
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 
 -- Fungsi untuk membuat karakter berjalan menuju titik kedua
-function walkToPosition(targetPosition)
+local function walkToPosition(targetPosition)
     -- Buat jalur menggunakan PathfindingService
     local path = PathfindingService:CreatePath({
         AgentRadius = 2, -- Ukuran lebar karakter (disesuaikan)
@@ -36,7 +31,7 @@ function walkToPosition(targetPosition)
     if path.Status == Enum.PathStatus.Complete then
         local waypoints = path:GetWaypoints()
 
-        for _, waypoint in pairs(waypoints) do
+        for _, waypoint in ipairs(waypoints) do
             -- Berjalan ke setiap titik di jalur
             humanoid:MoveTo(waypoint.Position)
 
@@ -54,6 +49,6 @@ function walkToPosition(targetPosition)
     end
 end
 
--- Panggil fungsi untuk berjalan dari titik awal ke titik kedua
+-- Panggil fungsi untuk berjalan dari posisi awal ke posisi kedua
 walkToPosition(endPosition)
 
