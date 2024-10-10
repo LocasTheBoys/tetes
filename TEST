@@ -1,4 +1,5 @@
-print("Test3")
+print("Test 4")
+
 -- Dapatkan karakter pemain
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -9,10 +10,10 @@ local humanoid = character:WaitForChild("Humanoid")
 
 -- Tentukan beberapa titik tujuan
 local positions = {
-    Vector3.new(-667.29, 231.88, 9.23), -- Tujuan 1
-    Vector3.new(-668.6, 243.88, 177.15), -- Tujuan 2
-    Vector3.new(-667.16, 255.62, 221.68), -- Tujuan 2
-    Vector3.new(-612.05, 271.38, 214.56)  -- Tujuan 3
+    Vector3.new(1438.85, 102.07, 2390.41), -- Tujuan 1
+    Vector3.new(1438.85, 101.61, 2454.58), -- Tujuan 2
+    Vector3.new(1437.18, 101.17, 2501.27), -- Tujuan 3
+    Vector3.new(1437.16, 113.15, 2549.17)  -- Tujuan 4
 }
 
 -- Fungsi untuk membuat karakter berjalan menuju titik tertentu
