@@ -1,4 +1,4 @@
-print("Test1")
+print("Test2")
 -- Dapatkan service PathfindingService
 local PathfindingService = game:GetService("PathfindingService")
 
@@ -6,14 +6,19 @@ local PathfindingService = game:GetService("PathfindingService")
 local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 
--- Pastikan karakter sudah dimuat sepenuhnya sebelum melanjutkan
+-- Pastikan karakter sudah dimuat sepenuhnya
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
 local humanoid = character:WaitForChild("Humanoid")
 
 -- Tentukan lokasi tujuan (Ganti dengan koordinat yang diinginkan)
 local targetPosition = Vector3.new(-612.05, 271.38, 214.56)
 
--- Fungsi untuk membuat pathfinding
+-- Parameter untuk mengecek apakah karakter berhenti
+local maxIdleTime = 2 -- Dalam detik
+local idleTime = 0 -- Waktu idle saat ini
+local checkInterval = 0.1 -- Interval waktu untuk mengecek karakter
+
+-- Fungsi untuk memindahkan karakter dengan pathfinding
 local function moveToPosition(targetPosition)
     -- Buat jalur pathfinding
     local path = PathfindingService:CreatePath({
@@ -36,7 +41,14 @@ local function moveToPosition(targetPosition)
             humanoid:MoveTo(waypoint.Position)
             
             -- Tunggu sampai karakter mencapai waypoint
-            humanoid.MoveToFinished:Wait()
+            local reached = humanoid.MoveToFinished:Wait()
+
+            -- Jika karakter berhenti terlalu lama, cari jalan baru
+            if not reached then
+                warn("Karakter terjebak. Mencoba mencari jalur alternatif...")
+                findAlternativePath(targetPosition)
+                break
+            end
 
             -- Jika waypoint memerlukan karakter melompat
             if waypoint.Action == Enum.PathWaypointAction.Jump then
@@ -49,5 +61,46 @@ local function moveToPosition(targetPosition)
     end
 end
 
--- Memanggil fungsi untuk bergerak ke targetPosition
+-- Fungsi untuk memonitor karakter apakah berhenti
+local function monitorCharacter()
+    local previousPosition = humanoidRootPart.Position
+
+    -- Loop untuk memeriksa pergerakan karakter setiap beberapa detik
+    while true do
+        wait(checkInterval)
+        local currentPosition = humanoidRootPart.Position
+
+        -- Jika karakter tidak bergerak
+        if (currentPosition - previousPosition).magnitude < 0.1 then
+            idleTime = idleTime + checkInterval
+
+            -- Jika idleTime melebihi batas yang ditentukan
+            if idleTime >= maxIdleTime then
+                warn("Karakter tidak bergerak, mencari jalur baru...")
+                findAlternativePath(targetPosition)
+                idleTime = 0
+            end
+        else
+            -- Jika karakter bergerak, reset idleTime
+            idleTime = 0
+        end
+
+        previousPosition = currentPosition
+    end
+end
+
+-- Fungsi untuk mencari jalur alternatif
+function findAlternativePath(targetPosition)
+    -- Tentukan posisi alternatif terdekat (di sini kita bisa melakukan pathfinding ulang)
+    local alternativePosition = humanoidRootPart.Position + Vector3.new(5, 0, 5) -- Contoh posisi terdekat
+    moveToPosition(alternativePosition)
+    
+    -- Setelah sampai di posisi alternatif, coba lagi menuju target akhir
+    moveToPosition(targetPosition)
+end
+
+-- Mulai gerakan ke targetPosition
 moveToPosition(targetPosition)
+
+-- Mulai monitoring pergerakan karakter
+spawn(monitorCharacter) -- Menjalankan fungsi monitor di thread terpisah
