@@ -2,7 +2,7 @@ local commonValue3 = "\226\129\130\\"  -- Simpan nilai yang sama di variabel
 local userId = 7341876710  -- User ID yang sama rkfsyt6
 
 local actions = {
-    {"Buy1", 35},  -- Aksi dan jumlah pengulangan untuk script 1
+    {"Buy3", 35},  -- Aksi dan jumlah pengulangan untuk script 1
 }
 
 for _, action in ipairs(actions) do
