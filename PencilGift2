@@ -2,7 +2,7 @@ local commonValue3 = "\226\129\130\\"  -- Simpan nilai yang sama di variabel
 local userId = 7445303927  -- User ID yang sama flolatil
 
 local actions = {
-    {"Buy10", 100},  -- Aksi dan jumlah pengulangan untuk script 1
+    {"Buy1", 100},  -- Aksi dan jumlah pengulangan untuk script 1
 }
 
 for _, action in ipairs(actions) do
