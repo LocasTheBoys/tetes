@@ -2,7 +2,7 @@ local commonValue3 = "\226\129\130\\"  -- Simpan nilai yang sama di variabel
 local userId = 7346168779  -- User ID yang sama sidjjim
 
 local actions = {
-    {"Buy1", 35},  -- Aksi dan jumlah pengulangan untuk script 1 
+    {"Buy10", 100},  -- Aksi dan jumlah pengulangan untuk script 1 
 }
 
 for _, action in ipairs(actions) do
@@ -19,10 +19,9 @@ for _, action in ipairs(actions) do
             }
         }
 
-        -- Memanggil server dengan args yang sudah disusun
         game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
         
         -- Tambahkan jeda 0,5 detik
-        wait(1.5)
+        wait(0.5)
     end
 end
