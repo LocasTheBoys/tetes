@@ -23,6 +23,6 @@ for _, action in ipairs(actions) do
         game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
         
         -- Tambahkan jeda 0,5 detik
-        wait(1)
+        wait(1.5)
     end
 end
