@@ -1,5 +1,5 @@
 local commonValue3 = "\226\129\130\\"  -- Simpan nilai yang sama di variabel
-local userId = 5768032018  -- User ID yang sama vittymen
+local userId = 7346184994  -- User ID yang sama killer4kurama2007
 
 local actions = {
     {"Buy1", 35},  -- Aksi dan jumlah pengulangan untuk script 1
