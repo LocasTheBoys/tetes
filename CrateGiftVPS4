@@ -1,8 +1,8 @@
 local commonValue3 = "\226\129\130\\"  -- Simpan nilai yang sama di variabel
-local userId = 5761751849  -- User ID yang sama kursmvi
+local userId = 7346186937  -- User ID yang sama EZUOtQWEP
 
 local actions = {
-    {"Buy1", 35},  -- Aksi dan jumlah pengulangan untuk script 1
+    {"Buy1", 100},  -- Aksi dan jumlah pengulangan untuk script 1
 }
 
 for _, action in ipairs(actions) do
@@ -20,5 +20,7 @@ for _, action in ipairs(actions) do
         }
 
         game:GetService("ReplicatedStorage").NetworkingContainer.DataRemote:FireServer(unpack(args))
+        -- Tambahkan jeda 0,5 detik
+        wait(0.5)
     end
 end
