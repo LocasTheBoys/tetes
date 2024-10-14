@@ -1,3 +1,5 @@
+print("Test 1")
+
 -- Menyimpan koordinat saat unit ditempatkan
 local unitPosition1 = Vector3.new(-14615.796875, 703.63525390625, -1542.5489501953125)
 local unitPosition2 = Vector3.new(-14614.7529296875, 703.63525390625, -1512.430908203125)
