@@ -1,37 +1,57 @@
-print("Test 5")
--- Dapatkan karakter pemain
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
+-- Menyimpan koordinat saat unit ditempatkan
+local unitPosition1 = Vector3.new(-14615.796875, 703.63525390625, -1542.5489501953125)
+local unitPosition2 = Vector3.new(-14614.7529296875, 703.63525390625, -1512.430908203125)
 
--- Pastikan karakter sudah sepenuhnya dimuat
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local humanoid = character:WaitForChild("Humanoid")
-
--- Tentukan beberapa titik tujuan
-local positions = {
-    Vector3.new(1409.43, 100.55, 2317.08), -- Tujuan a
-    Vector3.new(1464.42, 99.66, 2324.25), -- Tujuan b
-    Vector3.new(1438.85, 102.07, 2390.41), -- Tujuan 1
-    Vector3.new(1438.85, 101.61, 2454.58), -- Tujuan 2
-    Vector3.new(1437.18, 101.17, 2501.27), -- Tujuan 3
-    Vector3.new(1437.16, 113.15, 2549.17)  -- Tujuan 4
+-- Tempatkan unit pertama
+local args1 = {
+    [1] = "Grand Master",
+    [2] = CFrame.new(unitPosition1) * CFrame.Angles(0, 0, 0)
 }
+game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.7.0").knit.Services.UnitService.RF.PlaceUnit:InvokeServer(unpack(args1))
 
--- Fungsi untuk membuat karakter berjalan menuju titik tertentu
-function walkToPosition(targetPosition)
-    -- Arahkan Humanoid untuk berjalan ke titik tujuan
-    humanoid:MoveTo(targetPosition)
+-- Tempatkan unit kedua
+local args2 = {
+    [1] = "Grand Master",
+    [2] = CFrame.new(unitPosition2) * CFrame.Angles(0, 0, 0)
+}
+game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.7.0").knit.Services.UnitService.RF.PlaceUnit:InvokeServer(unpack(args2))
 
-    -- Tunggu sampai karakter sampai di titik tersebut
-    humanoid.MoveToFinished:Wait()
-end
+-- Tunggu beberapa detik agar unit ditempatkan
+task.wait(2)
 
--- Fungsi untuk berjalan ke semua tujuan
-function walkToAllPositions(positions)
-    for _, position in ipairs(positions) do
-        walkToPosition(position)
+-- Coba temukan unit berdasarkan koordinat yang telah disimpan
+local function findUnitByPosition(position)
+    for _, unit in pairs(workspace.Game.Map.PlacedUnits:GetChildren()) do
+        -- Gunakan PrimaryPart untuk memastikan kita mendapatkan posisinya
+        if unit:FindFirstChild("PrimaryPart") and (unit.PrimaryPart.Position - position).magnitude < 1 then
+            return unit
+        end
     end
+    return nil
 end
 
--- Panggil fungsi untuk berjalan ke semua tujuan
-walkToAllPositions(positions)
+-- Temukan unit pertama dan kedua berdasarkan posisi mereka
+local unit1 = findUnitByPosition(unitPosition1)
+local unit2 = findUnitByPosition(unitPosition2)
+
+-- Upgrade unit pertama
+if unit1 then
+    local upgradeArgs1 = {
+        [1] = unit1
+    }
+    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.7.0").knit.Services.UnitService.RF.UpgradeUnit:InvokeServer(unpack(upgradeArgs1))
+    print("Unit pertama berhasil diupgrade: ", unit1.Name)
+else
+    print("Unit pertama tidak ditemukan")
+end
+
+-- Upgrade unit kedua
+if unit2 then
+    local upgradeArgs2 = {
+        [1] = unit2
+    }
+    game:GetService("ReplicatedStorage").Packages._Index:FindFirstChild("sleitnick_knit@1.7.0").knit.Services.UnitService.RF.UpgradeUnit:InvokeServer(unpack(upgradeArgs2))
+    print("Unit kedua berhasil diupgrade: ", unit2.Name)
+else
+    print("Unit kedua tidak ditemukan")
+end
